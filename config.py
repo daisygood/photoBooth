@@ -5,4 +5,4 @@ file_path = '/home/pi/photobooth/pics/' # path to save images
 clear_on_startup = True # True will clear previously stored photos as the program launches.
 
 capture_count_pics = True # if true, show a photo count between taking photos. If false, do not. False is faster.
-s3_folder = 'that-conference'
+s3_folder = 'jer-becky'
