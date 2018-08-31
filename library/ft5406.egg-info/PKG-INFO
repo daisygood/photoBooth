@@ -1,0 +1,27 @@
+Metadata-Version: 1.1
+Name: ft5406
+Version: 0.0.2
+Summary: A module to drive the official FT5406 Raspberry Pi 7" touchscreen
+Home-page: http://shop.pimoroni.com
+Author: Philip Howard
+Author-email: phil@pimoroni.com
+License: MIT
+Description: #0.0.2
+        
+        * Improved event handling to be non-blocking
+        
+        #0.0.1
+        
+        * Initial prototype
+        
+Keywords: Raspberry Pi Explorer HAT
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Operating System :: POSIX :: Linux
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development
+Classifier: Topic :: System :: Hardware

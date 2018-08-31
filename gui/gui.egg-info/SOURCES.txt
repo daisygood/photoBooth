@@ -1,0 +1,9 @@
+CHANGELOG.txt
+MANIFEST.in
+README.md
+gui.py
+setup.py
+gui.egg-info/PKG-INFO
+gui.egg-info/SOURCES.txt
+gui.egg-info/dependency_links.txt
+gui.egg-info/top_level.txt

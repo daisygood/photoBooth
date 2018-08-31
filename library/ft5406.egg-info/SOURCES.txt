@@ -1,0 +1,9 @@
+CHANGELOG.txt
+MANIFEST.in
+README.md
+ft5406.py
+setup.py
+ft5406.egg-info/PKG-INFO
+ft5406.egg-info/SOURCES.txt
+ft5406.egg-info/dependency_links.txt
+ft5406.egg-info/top_level.txt
