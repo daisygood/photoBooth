@@ -6,13 +6,10 @@ import time
 import traceback
 import requests
 from time import sleep
-import RPi.GPIO as GPIO
 import picamera # http://picamera.readthedocs.org/en/release-1.4/install2.html
-from PIL import Image
 import atexit
 import sys
 import socket
-import pytumblr
 import pygame
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE                                                 
 import config # this is the config python file config.py
@@ -76,7 +73,7 @@ pygame.display.set_mode((config.monitor_w, config.monitor_h))
 screen = pygame.display.get_surface()
 pygame.display.set_caption('NM Photo Booth')
 pygame.mouse.set_visible(False)
-pygame.display.toggle_fullscreen()
+#pygame.display.toggle_fullscreen()
 
 #################
 ### Functions ###
@@ -216,9 +213,10 @@ def start_photobooth():
   while connected:
     try:
       file_to_upload = file_path + now + ".gif"
+      data = {'folder': config.s3_folder} 
       url = 'http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api/upload'
       files = {'file': open(file_to_upload, 'rb')}
-      requests.post(url, files=files)
+      requests.post(url, files=files, data=data)
       break
     except ValueError:
       print("Oops. No internect connection. Upload later.")
