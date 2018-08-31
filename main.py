@@ -213,10 +213,11 @@ def start_photobooth():
   while connected:
     try:
       file_to_upload = file_path + now + ".gif"
-      data = {'folder': config.s3_folder} 
+      data = { "folder" : config.s3_folder}
       url = 'http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api/upload'
-      files = {'file': open(file_to_upload, 'rb')}
-      requests.post(url, files=files, data=data)
+      files = [( 'files' , open(file_to_upload, 'rb') )]
+      r = requests.post(url, files=files, data=data)
+      print(r)
       break
     except ValueError:
       print("Oops. No internect connection. Upload later.")
