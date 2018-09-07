@@ -235,9 +235,9 @@ def start_photobooth():
   show_image(real_path + "/graphics/AllDone.png")
 
 ########################### Show upload location ###########################
-  time.sleep(prep_delay)
+  # time.sleep(prep_delay)
 
-  show_image(real_path + "/graphics/finished.png")
+  # show_image(real_path + "/graphics/finished.png")
 
  ########################### Restart photobooth ########################### 
   time.sleep(restart_delay)
