@@ -5,16 +5,18 @@ import glob
 import time
 import traceback
 import requests
+import json
 from time import sleep
-import picamera # http://picamera.readthedocs.org/en/release-1.4/install2.html
+import picamera 
 import atexit
 import sys
 import socket
 import pygame
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE                                                 
-import config # this is the config python file config.py
 from ft5406 import Touchscreen, TS_PRESS, TS_RELEASE
 from gui import Button, render_widgets, touchscreen_event
+import config
+import auth
 
 ########################
 ### Variables ###
@@ -65,7 +67,7 @@ replay_cycles = 2 # how many times to show each photo on-screen after taking
 ####################
 real_path = os.path.dirname(os.path.realpath(__file__))
 file_path = real_path + '/pics/'
-overlay_path = real_path + '/graphics/wedding_overlay.png'
+overlay_path = real_path + '/graphics/hiTech.png'
 
 # initialize pygame
 pygame.init()
@@ -73,7 +75,7 @@ pygame.display.set_mode((config.monitor_w, config.monitor_h))
 screen = pygame.display.get_surface()
 pygame.display.set_caption('NM Photo Booth')
 pygame.mouse.set_visible(False)
-pygame.display.toggle_fullscreen()
+#pygame.display.toggle_fullscreen()
 
 #################
 ### Functions ###
@@ -117,6 +119,23 @@ def is_connected():
      pass
   return False
 
+def get_token():
+  try:
+    url = 'https://dat-day-z.auth0.com/oauth/token'
+    data = {
+      "audience": "http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api",
+      "grant_type": "client_credentials",
+      "client_id": auth.client_id,
+      "client_secret": auth.client_secret
+    }
+    headers = { 'content-type': 'application/json' }
+    r = requests.post(url, data=json.dumps(data), headers=headers)
+    token = json.loads(r.content)['access_token']
+    return token
+  except: 
+    print('Something getting token')
+    sys.exit(0)
+
 # display one image on screen
 def show_image(image_path):
 
@@ -143,7 +162,7 @@ def taking_pics():
 
   try:
     for i in range(1,total_pics+1):
-      show_image(real_path + "/graphics/" + str(i) + ".png")
+      show_image(real_path + "/graphics/graphics_new/" + str(i) + ".png")
       time.sleep(capture_delay)
       camera.hflip = True # preview a mirror image
       camera.start_preview(resolution=(config.monitor_w, config.monitor_h))
@@ -162,14 +181,12 @@ def taking_pics():
 # Covert image to gif
 def convert():
 
-  
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
-    addOverlayCmd = 'gm composite -geometry +0+1574 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
+    addOverlayCmd = 'gm composite -geometry +0+1513 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
     os.system(addOverlayCmd)
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
-    os.system(graphicsmagick) #do the graphicsmagick action
-    
+    os.system(graphicsmagick) 
     
   graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
 
@@ -181,7 +198,7 @@ def start_photobooth():
   ########################## Begin Step 1 Set up Camera ###########################
 
   print("Get Ready")
-  show_image(real_path + "/graphics/StrikeAPose.png")
+  show_image(real_path + "/graphics/graphics_new/StrikeAPose.png")
   sleep(prep_delay)
 
 	# clear the screen
@@ -196,7 +213,7 @@ def start_photobooth():
 
   print("Creating an animated gif")
 
-  show_image(real_path + "/graphics/uploading.png")
+  show_image(real_path + "/graphics/graphics_new/uploading.png")
 
   convert()
 
@@ -214,9 +231,11 @@ def start_photobooth():
     try:
       file_to_upload = file_path + now + ".gif"
       data = { "folder" : config.s3_folder}
-      url = 'http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api/upload'
+      url = 'https://api.thepbcam.com/api/upload'
+      token = get_token()
+      headers = { "Authorization" : "Bearer %s" %token}
       files = [( 'files' , open(file_to_upload, 'rb') )]
-      r = requests.post(url, files=files, data=data)
+      r = requests.post(url, files=files, data=data, headers=headers)
       print(r)
       break
     except ValueError:
@@ -244,7 +263,7 @@ def start_photobooth():
   clear_pics()
   global running
   running = True
-  show_image(real_path + "/graphics/start.png")
+  show_image(real_path + "/graphics/graphics_new/start.png")
 
 
 
