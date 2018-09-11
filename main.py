@@ -251,12 +251,7 @@ def start_photobooth():
 
 ########################### Begin Step 5 #################################
   print("Done")
-  show_image(real_path + "/graphics/AllDone.png")
-
-########################### Show upload location ###########################
-  # time.sleep(prep_delay)
-
-  # show_image(real_path + "/graphics/finished.png")
+  show_image(real_path + "/graphics/graphics_new/AllDone.png")
 
  ########################### Restart photobooth ########################### 
   time.sleep(restart_delay)
@@ -278,7 +273,7 @@ if config.clear_on_startup:
 
 print("Photo booth app running...")
 
-show_image(real_path + "/graphics/start.png")
+show_image(real_path + "/graphics/graphics_new/start.png")
 
 #Widgets
 render_widgets(screen)
