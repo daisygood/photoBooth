@@ -129,8 +129,8 @@ def get_token():
       "client_secret": auth.client_secret
     }
     headers = { 'content-type': 'application/json' }
-    r = requests.post(url, data=json.dumps(data), headers=headers)
-    token = json.loads(r.content)['access_token']
+    r = requests.post(url, data=json.dumps(data), headers=headers).json()
+    token = r['access_token']
     return token
   except: 
     print('Something getting token')
