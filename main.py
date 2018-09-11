@@ -7,12 +7,12 @@ import traceback
 import requests
 import json
 from time import sleep
-import picamera 
+import picamera
 import atexit
 import sys
 import socket
 import pygame
-from pygame.locals import QUIT, KEYDOWN, K_ESCAPE                                                 
+from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
 from ft5406 import Touchscreen, TS_PRESS, TS_RELEASE
 from gui import Button, render_widgets, touchscreen_event
 import config
@@ -75,7 +75,7 @@ pygame.display.set_mode((config.monitor_w, config.monitor_h))
 screen = pygame.display.get_surface()
 pygame.display.set_caption('NM Photo Booth')
 pygame.mouse.set_visible(False)
-#pygame.display.toggle_fullscreen()
+pygame.display.toggle_fullscreen()
 
 #################
 ### Functions ###
@@ -132,7 +132,7 @@ def get_token():
     r = requests.post(url, data=json.dumps(data), headers=headers).json()
     token = r['access_token']
     return token
-  except: 
+  except:
     print('Something getting token')
     sys.exit(0)
 
@@ -177,7 +177,7 @@ def taking_pics():
   except:
     print('Something went wrong while trying to take pics')
     sys.exit(0)
-  
+
 # Covert image to gif
 def convert():
 
@@ -186,8 +186,8 @@ def convert():
     addOverlayCmd = 'gm composite -geometry +0+1513 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
     os.system(addOverlayCmd)
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
-    os.system(graphicsmagick) 
-    
+    os.system(graphicsmagick)
+
   graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
 
   os.system(graphicsmagick)
@@ -253,7 +253,7 @@ def start_photobooth():
   print("Done")
   show_image(real_path + "/graphics/graphics_new/AllDone.png")
 
- ########################### Restart photobooth ########################### 
+ ########################### Restart photobooth ###########################
   time.sleep(restart_delay)
   clear_pics()
   global running
