@@ -231,7 +231,7 @@ def start_photobooth():
     try:
       file_to_upload = file_path + now + ".gif"
       data = { "folder" : config.s3_folder}
-      url = 'https://api.thepbcam.com/api/upload'
+      url = 'http://api.thepbcam.com/api/upload'
       token = get_token()
       headers = { "Authorization" : "Bearer %s" %token}
       files = [( 'files' , open(file_to_upload, 'rb') )]

@@ -21,12 +21,12 @@ def get_token():
     print('Something getting token')
 
 real_path = os.path.dirname(os.path.realpath(__file__))
-file_path = real_path + '/graphics/hiTech.png'
+file_path = real_path + '/test.gif'
 file_to_upload = file_path
 data = { "folder" : config.s3_folder}
-url = 'https://api.thepbcam.com/api/upload'
+url = 'http://api.thepbcam.com/api/upload'
 token = get_token()
 headers = { "Authorization" : "Bearer %s" %token}
+print(headers)
 files = [( 'files' , open(file_to_upload, 'rb') )]
-r = requests.post(url, files=files, data=data, headers=headers)
-print(r.r)
+r = requests.post(url, files=files, data=data, headers=headers, verify=False)
