@@ -9,3 +9,7 @@ echo "Installing graphicsmagick"
 sudo apt-get install graphicsmagick
 echo "Check if pics folder exists"
 mkdir -p pics
+echo "Create executable script"
+cd ../Desktop
+cp /home/pi/photoBooth/photoBooth.sh photoBooth.sh
+chmod ugo+x photoBooth.sh
