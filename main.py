@@ -171,13 +171,10 @@ def convert():
     os.system(graphicsmagick) #do the graphicsmagick action
     
     
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
-
-  os.system(graphicsmagick)
-
-    graphicsmagick = "gm montage -geometry 640x480+10+10 " + file_path + now + "*-sm.jpg " +"-tile 1x3  montage.jpg"
-
-  os.system(graphicsmagick)
+    graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
+    os.system(graphicsmagick)
+    graphicsmagick = "gm montage -geometry 640x480+10+10 " + file_path + now + "*-sm.jpg " +"-tile 1x3 montage.jpg"
+    os.system(graphicsmagick)
 
 # Trigger photobooth workflow
 def start_photobooth():
