@@ -187,7 +187,6 @@ def convert():
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
   
-  now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
   graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
 
   os.system(graphicsmagick)
