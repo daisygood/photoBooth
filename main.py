@@ -37,8 +37,6 @@ high_res_w = 2592 # width of high res image, if taken
 high_res_h = 1944 # height of high res image, if taken
 frame_rate = 15
 
-# time stamp
-now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 # touch screen setup
 ts = Touchscreen()
@@ -181,6 +179,9 @@ def taking_pics():
 
 # Covert image to gif
 def convert():
+
+# time stamp
+ now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
