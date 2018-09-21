@@ -4,6 +4,7 @@ import os
 import glob
 import time
 import datetime
+import random
 import traceback
 import requests
 import json
@@ -37,7 +38,8 @@ high_res_w = 2592 # width of high res image, if taken
 high_res_h = 1944 # height of high res image, if taken
 frame_rate = 15
 
-#now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+filename = None
 
 # touch screen setup
 ts = Touchscreen()
@@ -161,7 +163,6 @@ def clear_screen():
 def taking_pics():
 
   try:
-    now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     for i in range(1,total_pics+1):
       show_image(real_path + "/graphics/graphics_new/" + str(i) + ".png")
       time.sleep(capture_delay)
@@ -181,7 +182,6 @@ def taking_pics():
 
 # Covert image to gif
 def convert():
-  now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
@@ -190,7 +190,9 @@ def convert():
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
   
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
+  global filename
+  filename = file_path + now + random.randint(1,10000000000)
+  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + filename + ".gif"
 
   os.system(graphicsmagick)
 
@@ -231,8 +233,7 @@ def start_photobooth():
 
   while connected:
     try:
-      now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-      file_to_upload = file_path + now + ".gif"
+      file_to_upload = filename + ".gif"
       data = { "folder" : config.s3_folder}
       url = 'http://api.thepbcam.com/api/upload'
       token = get_token()
