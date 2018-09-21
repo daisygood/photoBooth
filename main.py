@@ -180,15 +180,13 @@ def taking_pics():
 # Covert image to gif
 def convert():
 
-# time stamp
- 
-
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
     addOverlayCmd = 'gm composite -geometry +0+1513 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
     os.system(addOverlayCmd)
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
+  
   now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
   graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
 
