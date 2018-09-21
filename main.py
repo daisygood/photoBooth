@@ -161,6 +161,7 @@ def clear_screen():
 def taking_pics():
 
   try:
+    now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     for i in range(1,total_pics+1):
       show_image(real_path + "/graphics/graphics_new/" + str(i) + ".png")
       time.sleep(capture_delay)
@@ -180,7 +181,7 @@ def taking_pics():
 
 # Covert image to gif
 def convert():
- now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+  now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
@@ -230,6 +231,7 @@ def start_photobooth():
 
   while connected:
     try:
+      now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
       file_to_upload = file_path + now + ".gif"
       data = { "folder" : config.s3_folder}
       url = 'http://api.thepbcam.com/api/upload'
