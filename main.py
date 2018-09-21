@@ -77,7 +77,7 @@ pygame.display.set_mode((config.monitor_w, config.monitor_h))
 screen = pygame.display.get_surface()
 pygame.display.set_caption('NM Photo Booth')
 pygame.mouse.set_visible(False)
-#pygame.display.toggle_fullscreen()
+pygame.display.toggle_fullscreen()
 
 #################
 ### Functions ###
@@ -158,8 +158,6 @@ def clear_screen():
   screen.fill( (0,0,0) )
   pygame.display.flip()
 
-#
-
 
 # Taking pics
 def taking_pics():
@@ -192,7 +190,9 @@ def convert():
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
   
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + getCurrentDatetime() + ".gif"
+  global gif_file_name
+  gif_file_name = file_path + now + random.randint(1,10000000000)
+  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + gif_file_name + ".gif"
 
   os.system(graphicsmagick)
 
