@@ -3,6 +3,7 @@
 import os
 import glob
 import time
+import datetime
 import traceback
 import requests
 import json
@@ -37,7 +38,7 @@ high_res_h = 1944 # height of high res image, if taken
 frame_rate = 15
 
 # time stamp
-now = time.strftime("%Y-%m-%d-%H-%M-%S")
+now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 # touch screen setup
 ts = Touchscreen()
