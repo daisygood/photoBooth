@@ -39,7 +39,7 @@ high_res_h = 1944 # height of high res image, if taken
 frame_rate = 15
 
 now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-filename = None
+gif_file_name = ""
 
 # touch screen setup
 ts = Touchscreen()
@@ -190,9 +190,9 @@ def convert():
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
   
-  global filename
-  filename = file_path + now + random.randint(1,10000000000)
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + filename + ".gif"
+  global gif_file_name
+  gif_file_name = file_path + now + random.randint(1,10000000000)
+  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + gif_file_name + ".gif"
 
   os.system(graphicsmagick)
 
@@ -233,7 +233,7 @@ def start_photobooth():
 
   while connected:
     try:
-      file_to_upload = filename + ".gif"
+      file_to_upload = gif_file_name + ".gif"
       data = { "folder" : config.s3_folder}
       url = 'http://api.thepbcam.com/api/upload'
       token = get_token()
