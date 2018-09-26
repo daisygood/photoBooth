@@ -69,7 +69,7 @@ replay_cycles = 2 # how many times to show each photo on-screen after taking
 ####################
 real_path = os.path.dirname(os.path.realpath(__file__))
 file_path = real_path + '/pics/'
-overlay_path = real_path + '/graphics/hiTech.png'
+overlay_path = real_path + '/graphics/grace-hopper-overlay.png'
 
 # initialize pygame
 pygame.init()
@@ -185,7 +185,7 @@ def convert():
 
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
-    addOverlayCmd = 'gm composite -geometry +0+1513 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
+    addOverlayCmd = 'gm composite -geometry +0+1567 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
     os.system(addOverlayCmd)
     graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
     os.system(graphicsmagick)
