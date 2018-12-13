@@ -183,6 +183,18 @@ def taking_pics():
 # Covert image to gif
 def convert():
   
+  # overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
+  # addOverlayCmd = 'gm composite -geometry +0+1513 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
+  # os.system(addOverlayCmd)
+  # graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
+  # os.system(graphicsmagick)
+  # global gif_file_name
+  # gif_file_name = file_path + now + str(random.randint(1,1000000000000000))
+  # graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + gif_file_name + ".gif"
+
+  # os.system(graphicsmagick)
+
+  # Without Overlay
   global gif_file_name
   gif_file_name = file_path + now + str(random.randint(1,1000000000000000))
   graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*.jpg " + gif_file_name + ".gif"
