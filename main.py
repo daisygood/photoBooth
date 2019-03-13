@@ -190,7 +190,7 @@ def convert():
 
   global gif_file_name
   gif_file_name = file_path + now + str(random.randint(1,1000000000000000))
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*.jpg " + gif_file_name + ".gif"
+  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-overlay.jpg " + gif_file_name + ".gif"
 
   os.system(graphicsmagick)
 
