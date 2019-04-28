@@ -3,18 +3,22 @@
 import os
 import glob
 import time
+import datetime
+import random
 import traceback
 import requests
+import json
 from time import sleep
-import picamera # http://picamera.readthedocs.org/en/release-1.4/install2.html
+import picamera
 import atexit
 import sys
 import socket
 import pygame
-from pygame.locals import QUIT, KEYDOWN, K_ESCAPE                                                 
-import config # this is the config python file config.py
+from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
 from ft5406 import Touchscreen, TS_PRESS, TS_RELEASE
 from gui import Button, render_widgets, touchscreen_event
+import config
+import auth
 
 ########################
 ### Variables ###
@@ -30,12 +34,12 @@ test_server = 'www.google.com'
 # full frame of v1 camera is 2592x1944. Wide screen max is 2592,1555
 # if you run into resource issues, try smaller, like 1920x1152.
 # or increase memory http://picamera.readthedocs.io/en/release-1.12/fov.html#hardware-limits
-high_res_w = 2592 # width of high res image, if taken
-high_res_h = 1944 # height of high res image, if taken
-frame_rate = 15
+high_res_w = 1296 # width of high res image, if taken
+high_res_h = 972 # height of high res image, if taken
+frame_rate = 42
 
-# time stamp
-now = time.strftime("%Y-%m-%d-%H-%M-%S")
+now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+gif_file_name = ""
 
 # touch screen setup
 ts = Touchscreen()
@@ -65,7 +69,7 @@ replay_cycles = 2 # how many times to show each photo on-screen after taking
 ####################
 real_path = os.path.dirname(os.path.realpath(__file__))
 file_path = real_path + '/pics/'
-overlay_path = real_path + '/graphics/wedding_overlay.png'
+overlay_path = real_path + '/graphics/upaf-overlay.png'
 
 # initialize pygame
 pygame.init()
@@ -117,6 +121,23 @@ def is_connected():
      pass
   return False
 
+def get_token():
+  try:
+    url = 'https://dat-day-z.auth0.com/oauth/token'
+    data = {
+      "audience": "http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api",
+      "grant_type": "client_credentials",
+      "client_id": auth.client_id,
+      "client_secret": auth.client_secret
+    }
+    headers = { 'content-type': 'application/json' }
+    r = requests.post(url, data=json.dumps(data), headers=headers).json()
+    token = r['access_token']
+    return token
+  except:
+    print('Something getting token')
+    sys.exit(0)
+
 # display one image on screen
 def show_image(image_path):
 
@@ -143,7 +164,7 @@ def taking_pics():
 
   try:
     for i in range(1,total_pics+1):
-      show_image(real_path + "/graphics/" + str(i) + ".png")
+      show_image(real_path + "/graphics/graphics_new/" + str(i) + ".png")
       time.sleep(capture_delay)
       camera.hflip = True # preview a mirror image
       camera.start_preview(resolution=(config.monitor_w, config.monitor_h))
@@ -158,22 +179,27 @@ def taking_pics():
   except:
     print('Something went wrong while trying to take pics')
     sys.exit(0)
-  
+
 # Covert image to gif
 def convert():
-
   
   for x in range(1, total_pics+1): #batch process all the images
     overlayname = file_path + now + '-0'+  str(x) + '-overlay.jpg'
-    addOverlayCmd = 'gm composite -geometry +0+1574 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
+    addOverlayCmd = 'gm composite -geometry +0+792 -compose Over ' + overlay_path + ' ' + file_path + now + "-0" +str(x) + ".jpg" + ' ' + ' ' + overlayname
     os.system(addOverlayCmd)
-    graphicsmagick = "gm convert -size 1500x1500 " + file_path + now + "-0" + str(x) + "-overlay.jpg -thumbnail 1500x1500 " + file_path + now + "-0" + str(x) + "-sm.jpg"
-    os.system(graphicsmagick) #do the graphicsmagick action
-    
-    
-  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-sm.jpg " + file_path + now + ".gif"
+
+  global gif_file_name
+  gif_file_name = file_path + now + str(random.randint(1,1000000000000000))
+  graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*-overlay.jpg " + gif_file_name + ".gif"
 
   os.system(graphicsmagick)
+
+  # Without Overlay
+  # global gif_file_name
+  # gif_file_name = file_path + now + str(random.randint(1,1000000000000000))
+  # graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + file_path + now + "*.jpg " + gif_file_name + ".gif"
+
+  # os.system(graphicsmagick)
 
 # Trigger photobooth workflow
 def start_photobooth():
@@ -181,7 +207,7 @@ def start_photobooth():
   ########################## Begin Step 1 Set up Camera ###########################
 
   print("Get Ready")
-  show_image(real_path + "/graphics/StrikeAPose.png")
+  show_image(real_path + "/graphics/graphics_new/StrikeAPose.png")
   sleep(prep_delay)
 
 	# clear the screen
@@ -196,7 +222,7 @@ def start_photobooth():
 
   print("Creating an animated gif")
 
-  show_image(real_path + "/graphics/uploading.png")
+  show_image(real_path + "/graphics/graphics_new/uploading.png")
 
   convert()
 
@@ -212,11 +238,13 @@ def start_photobooth():
 
   while connected:
     try:
-      file_to_upload = file_path + now + ".gif"
+      file_to_upload = gif_file_name + ".gif"
       data = { "folder" : config.s3_folder}
-      url = 'http://ec2-34-221-7-217.us-west-2.compute.amazonaws.com/api/upload'
+      url = 'http://api.thepbcam.com/api/upload'
+      token = get_token()
+      headers = { "Authorization" : "Bearer %s" %token}
       files = [( 'files' , open(file_to_upload, 'rb') )]
-      r = requests.post(url, files=files, data=data)
+      r = requests.post(url, files=files, data=data, headers=headers)
       print(r)
       break
     except ValueError:
@@ -232,19 +260,14 @@ def start_photobooth():
 
 ########################### Begin Step 5 #################################
   print("Done")
-  show_image(real_path + "/graphics/AllDone.png")
+  show_image(real_path + "/graphics/graphics_new/AllDone.png")
 
-########################### Show upload location ###########################
-  # time.sleep(prep_delay)
-
-  # show_image(real_path + "/graphics/finished.png")
-
- ########################### Restart photobooth ########################### 
+ ########################### Restart photobooth ###########################
   time.sleep(restart_delay)
   clear_pics()
   global running
   running = True
-  show_image(real_path + "/graphics/start.png")
+  show_image(real_path + "/graphics/graphics_new/start.png")
 
 
 
@@ -259,7 +282,7 @@ if config.clear_on_startup:
 
 print("Photo booth app running...")
 
-show_image(real_path + "/graphics/start.png")
+show_image(real_path + "/graphics/graphics_new/start.png")
 
 #Widgets
 render_widgets(screen)
