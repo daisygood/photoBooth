@@ -69,7 +69,7 @@ replay_cycles = 2 # how many times to show each photo on-screen after taking
 ####################
 real_path = os.path.dirname(os.path.realpath(__file__))
 file_path = real_path + '/pics/'
-overlay_path = real_path + '/graphics/upaf-overlay.png'
+overlay_path = real_path + '/graphics/ifair-overlay.png'
 
 # initialize pygame
 pygame.init()
